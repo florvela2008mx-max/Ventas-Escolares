@@ -1,108 +1,514 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ventas Escolares</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ventas Escolares</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #faf7f2;
+      --surface: #ffffff;
+      --card: #fff;
+      --border: #e8e0d5;
+      --accent: #e85d26;
+      --accent2: #f5a623;
+      --dark: #1a1208;
+      --text: #2d2010;
+      --muted: #9a8a70;
+      --success: #2d7a4f;
+      --error: #c0392b;
+      --radius: 14px;
+    }
 
-<style>
-body{
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background: #f4f4f4;
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-h1{
-    text-align:center;
-}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse at 90% 10%, rgba(232,93,38,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 10% 90%, rgba(245,166,35,0.08) 0%, transparent 50%);
+    }
 
-button{
-    padding:10px 20px;
-    cursor:pointer;
-    margin-bottom:15px;
-}
+    header {
+      background: var(--dark);
+      padding: 28px 36px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
 
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:white;
-}
+    .logo {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
 
-th, td{
-    border:1px solid #ccc;
-    padding:10px;
-    text-align:center;
-}
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 1px;
+    }
 
-th{
-    background:#007bff;
-    color:white;
-}
-</style>
+    header h1 span { color: var(--accent2); }
 
+    header p {
+      color: #9a8a70;
+      font-size: 0.82rem;
+      margin-top: 3px;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 36px 24px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* FORM */
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      position: sticky;
+      top: 24px;
+    }
+
+    .form-card h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .field { margin-bottom: 16px; }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus { border-color: var(--accent); }
+    select option { background: #fff; }
+
+    .total-preview {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .total-preview span:first-child { font-size: 0.8rem; opacity: 0.85; font-weight: 500; }
+    .total-preview span:last-child { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; }
+
+    .btn-save {
+      width: 100%;
+      padding: 13px;
+      background: var(--accent);
+      border: none;
+      border-radius: 9px;
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-save:hover { background: #c94d1a; transform: translateY(-1px); }
+    .btn-save:active { transform: translateY(0); }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .msg {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none;
+    }
+    .msg.success { background: #e8f5ee; border: 1px solid #a8d5bc; color: var(--success); display: block; }
+    .msg.error   { background: #fdecea; border: 1px solid #f5c0bb; color: var(--error); display: block; }
+
+    /* TABLE */
+    .table-section h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-refresh {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      padding: 6px 16px;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-refresh:hover { border-color: var(--accent); color: var(--accent); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); font-weight: 600; }
+    .stat-value { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--dark); margin-top: 4px; }
+    .stat-value.orange { color: var(--accent); }
+    .stat-value.gold { color: var(--accent2); }
+
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead { background: var(--dark); }
+
+    th {
+      padding: 13px 16px;
+      text-align: left;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #9a8a70;
+    }
+
+    td {
+      padding: 13px 16px;
+      font-size: 0.88rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fdf8f3; }
+
+    .id-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: monospace;
+    }
+
+    .total-chip {
+      background: linear-gradient(135deg, rgba(232,93,38,0.1), rgba(245,166,35,0.1));
+      border: 1px solid rgba(232,93,38,0.2);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .fecha { color: var(--muted); font-size: 0.78rem; }
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .count-chip {
+      background: rgba(232,93,38,0.1);
+      border: 1px solid rgba(232,93,38,0.2);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; }
+      .form-card { position: static; }
+      .stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<h1>Ventas Escolares</h1>
+<header>
+  <div class="logo">🛒</div>
+  <div>
+    <h1>Ventas <span>Escolares</span></h1>
+    <p>Sistema de registro y consulta — Velazquez Gutierrez Flor Alejandra</p>
+  </div>
+</header>
 
-<button onclick="consultarVentas()">Consultar Ventas</button>
+<div class="container">
 
-<table id="tablaVentas">
-    <thead>
-        <tr>
+  <!-- FORMULARIO -->
+  <div class="form-card">
+    <h2>➕ Nueva Venta</h2>
+
+    <div class="field">
+      <label>Producto</label>
+      <input type="text" id="producto" placeholder="Ej. Cuaderno, Bolígrafo..."/>
+    </div>
+
+    <div class="field">
+      <label>Cantidad</label>
+      <input type="number" id="cantidad" placeholder="1" min="1" oninput="calcTotal()"/>
+    </div>
+
+    <div class="field">
+      <label>Precio unitario ($)</label>
+      <input type="number" id="precio" placeholder="0.00" step="0.01" min="0" oninput="calcTotal()"/>
+    </div>
+
+    <div class="total-preview">
+      <span>Total calculado</span>
+      <span id="totalPreview">$0.00</span>
+    </div>
+
+    <div class="field">
+      <label>Responsable / Vendedor</label>
+      <input type="text" id="responsable" placeholder="Nombre del responsable"/>
+    </div>
+
+    <button class="btn-save" id="btnGuardar" onclick="guardar()">REGISTRAR VENTA</button>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="table-section">
+    <h2>
+      <span>📋 Ventas Registradas <span class="count-chip" id="count">—</span></span>
+      <button class="btn-refresh" onclick="cargarDatos()">↻ Actualizar</button>
+    </h2>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Total registros</div>
+        <div class="stat-value orange" id="statCount">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Unidades vendidas</div>
+        <div class="stat-value" id="statUnidades">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Ingresos totales</div>
+        <div class="stat-value gold" id="statTotal">—</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="loading" id="loading">
+        <span class="spinner"></span> Cargando ventas...
+      </div>
+      <table id="tabla" style="display:none">
+        <thead>
+          <tr>
             <th>ID</th>
             <th>Producto</th>
             <th>Cantidad</th>
             <th>Precio</th>
             <th>Total</th>
+            <th>Responsable</th>
             <th>Fecha</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
 
 <script>
+  const URL_BASE = 'https://lwprlndyuzvejdnecroa.supabase.co/rest/v1/ventas';
+  const KEY = 'sb_publishable_6A4ZkWhVuc0OWJ-YNTZqIQ_ar-VVNsP';
+  const HEADERS = {
+    'apikey': KEY,
+    'Authorization': 'Bearer ' + KEY,
+    'Content-Type': 'application/json'
+  };
 
-const URL =
-'https://lwprlndyuzvejdnecroa.supabase.co/rest/v1/ventas?select=*';
+  function calcTotal() {
+    const cant  = parseFloat(document.getElementById('cantidad').value) || 0;
+    const prec  = parseFloat(document.getElementById('precio').value) || 0;
+    const total = cant * prec;
+    document.getElementById('totalPreview').textContent = '$' + total.toFixed(2);
+  }
 
-const API_KEY =
-'sb_publishable_6A4ZkWhVuc0OWJ-YNTZqIQ_ar-VVNsP';
+  function fecha(str) {
+    if (!str) return '—';
+    const d = new Date(str);
+    return `<span class="fecha">${d.toLocaleDateString('es-MX', {day:'2-digit', month:'short', year:'numeric'})}</span>`;
+  }
 
-async function consultarVentas(){
+  async function cargarDatos() {
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('tabla').style.display = 'none';
 
-    const respuesta = await fetch(URL,{
-        method:'GET',
-        headers:{
-            'apikey': API_KEY,
-            'Authorization':'Bearer ' + API_KEY,
-            'Content-Type':'application/json'
-        }
-    });
+    try {
+      const res  = await fetch(URL_BASE + '?order=id.asc', { headers: HEADERS });
+      const data = await res.json();
 
-    const datos = await respuesta.json();
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
 
-    let tbody = document.querySelector('#tablaVentas tbody');
-    tbody.innerHTML='';
+      let totalUnidades = 0, totalIngresos = 0;
 
-    datos.forEach(venta=>{
+      data.forEach(r => {
+        totalUnidades += Number(r.cantidad) || 0;
+        totalIngresos += Number(r.total) || 0;
 
         tbody.innerHTML += `
-        <tr>
-            <td>${venta.id}</td>
-            <td>${venta.producto}</td>
-            <td>${venta.cantidad}</td>
-            <td>$${venta.precio}</td>
-            <td>$${venta.total}</td>
-            <td>${venta.fecha_registro}</td>
-        </tr>
-        `;
+          <tr>
+            <td><span class="id-chip">#${r.id}</span></td>
+            <td><strong>${r.producto}</strong></td>
+            <td>${r.cantidad}</td>
+            <td>$${Number(r.precio).toFixed(2)}</td>
+            <td><span class="total-chip">$${Number(r.total).toFixed(2)}</span></td>
+            <td>${r.responsable || '—'}</td>
+            <td>${fecha(r.fecha_registro)}</td>
+          </tr>`;
+      });
 
-    });
+      document.getElementById('count').textContent     = data.length + ' registros';
+      document.getElementById('statCount').textContent  = data.length;
+      document.getElementById('statUnidades').textContent = totalUnidades;
+      document.getElementById('statTotal').textContent  = '$' + totalIngresos.toFixed(2);
 
-}
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('tabla').style.display   = 'table';
 
+    } catch(e) {
+      document.getElementById('loading').innerHTML = '⚠️ Error al cargar los datos.';
+    }
+  }
+
+  async function guardar() {
+    const producto    = document.getElementById('producto').value.trim();
+    const cantidad    = parseFloat(document.getElementById('cantidad').value);
+    const precio      = parseFloat(document.getElementById('precio').value);
+    const responsable = document.getElementById('responsable').value.trim();
+    const total       = cantidad * precio;
+    const msg         = document.getElementById('msg');
+    const btn         = document.getElementById('btnGuardar');
+
+    msg.className = 'msg';
+    msg.style.display = 'none';
+
+    if (!producto || !cantidad || !precio) {
+      msg.textContent = '⚠️ Producto, cantidad y precio son obligatorios.';
+      msg.className = 'msg error';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'GUARDANDO...';
+
+    try {
+      const res = await fetch(URL_BASE, {
+        method: 'POST',
+        headers: { ...HEADERS, 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ producto, cantidad, precio, total, responsable })
+      });
+
+      if (res.status === 201 || res.ok) {
+        msg.textContent = '✅ Venta registrada correctamente.';
+        msg.className = 'msg success';
+        document.getElementById('producto').value    = '';
+        document.getElementById('cantidad').value    = '';
+        document.getElementById('precio').value      = '';
+        document.getElementById('responsable').value = '';
+        document.getElementById('totalPreview').textContent = '$0.00';
+        cargarDatos();
+      } else {
+        const err = await res.json();
+        msg.textContent = '❌ Error: ' + (err.message || 'No se pudo guardar.');
+        msg.className = 'msg error';
+      }
+    } catch(e) {
+      msg.textContent = '❌ Error de conexión con la base de datos.';
+      msg.className = 'msg error';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'REGISTRAR VENTA';
+  }
+
+  cargarDatos();
 </script>
-
 </body>
 </html>
