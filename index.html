@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ventas Escolares</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #f4f4f4;
+}
+
+h1{
+    text-align:center;
+}
+
+button{
+    padding:10px 20px;
+    cursor:pointer;
+    margin-bottom:15px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th, td{
+    border:1px solid #ccc;
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#007bff;
+    color:white;
+}
+</style>
+
+</head>
+<body>
+
+<h1>Ventas Escolares</h1>
+
+<button onclick="consultarVentas()">Consultar Ventas</button>
+
+<table id="tablaVentas">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Total</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+
+const URL =
+'https://lwprlndyuzvejdnecroa.supabase.co/rest/v1/ventas?select=*';
+
+const API_KEY =
+'sb_publishable_6A4ZkWhVuc0OWJ-YNTZqIQ_ar-VVNsP';
+
+async function consultarVentas(){
+
+    const respuesta = await fetch(URL,{
+        method:'GET',
+        headers:{
+            'apikey': API_KEY,
+            'Authorization':'Bearer ' + API_KEY,
+            'Content-Type':'application/json'
+        }
+    });
+
+    const datos = await respuesta.json();
+
+    let tbody = document.querySelector('#tablaVentas tbody');
+    tbody.innerHTML='';
+
+    datos.forEach(venta=>{
+
+        tbody.innerHTML += `
+        <tr>
+            <td>${venta.id}</td>
+            <td>${venta.producto}</td>
+            <td>${venta.cantidad}</td>
+            <td>$${venta.precio}</td>
+            <td>$${venta.total}</td>
+            <td>${venta.fecha_registro}</td>
+        </tr>
+        `;
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
